@@ -8,6 +8,25 @@ import {
   type ChatMessage
 } from '@/types/os'
 
+// Auto-detect the AgentOS API URL from the current browser URL.
+// When accessed via Coder subdomain proxying, the Agent-UI is at:
+//   agent-ui--<workspace>--<user>.coder.example.com
+// The AgentOS API is at:
+//   agentos--<workspace>--<user>.coder.example.com
+// When accessed via localhost (SSH tunnel), the API is at localhost:8000.
+function detectDefaultEndpoint(): string {
+  if (typeof window === 'undefined') return 'http://localhost:8000'
+  const hostname = window.location.hostname
+  // Check if we're on a Coder subdomain (contains '--' segments)
+  if (hostname.includes('--') && hostname.includes('agent-ui')) {
+    const protocol = window.location.protocol
+    const apiHostname = hostname.replace('agent-ui', 'agentos')
+    return `${protocol}//${apiHostname}`
+  }
+  // Default for localhost / SSH tunnel access
+  return 'http://localhost:8000'
+}
+
 interface Store {
   hydrated: boolean
   setHydrated: () => void
@@ -83,7 +102,7 @@ export const useStore = create<Store>()(
             typeof messages === 'function' ? messages(state.messages) : messages
         })),
       chatInputRef: { current: null },
-      selectedEndpoint: 'http://localhost:8000',
+      selectedEndpoint: detectDefaultEndpoint(),
       setSelectedEndpoint: (selectedEndpoint) =>
         set(() => ({ selectedEndpoint })),
       authToken: '',
@@ -112,10 +131,18 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'endpoint-storage',
+      version: 2,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         selectedEndpoint: state.selectedEndpoint
       }),
+      migrate: (persistedState: Record<string, unknown> | undefined, version: number) => {
+        // If the persisted version is old, clear the endpoint so the new auto-detect default is used
+        if (version < 2 && persistedState) {
+          return { ...persistedState, selectedEndpoint: undefined }
+        }
+        return persistedState
+      },
       onRehydrateStorage: () => (state) => {
         state?.setHydrated?.()
       }
