@@ -9,20 +9,24 @@ import {
 } from '@/types/os'
 
 // Auto-detect the AgentOS API URL from the current browser URL.
-// When accessed via Coder subdomain proxying, the Agent-UI is at:
-//   agent-ui--<workspace>--<user>.coder.example.com
-// The AgentOS API is at:
-//   agentos--<workspace>--<user>.coder.example.com
-// When accessed via localhost (SSH tunnel), the API is at localhost:8000.
+// When accessed via Coder subdomain proxying, the Agent-UI and AgentOS are
+// on different subdomains, which causes CORS errors. To avoid this, we use
+// a Next.js API route (/api/proxy/*) that proxies requests server-side.
+// The browser only talks to the Agent-UI's own origin — no CORS.
+// When accessed via localhost (SSH tunnel), the API is at localhost:8000
+// and no proxy is needed (same origin or no CORS restrictions).
 function detectDefaultEndpoint(): string {
   if (typeof window === 'undefined') return 'http://localhost:8000'
   const hostname = window.location.hostname
   // Check if we're on a Coder subdomain (contains '--' segments)
   if (hostname.includes('--') && hostname.includes('agent-ui')) {
-    const protocol = window.location.protocol
-    const apiHostname = hostname.replace('agent-ui', 'agentos')
-    return `${protocol}//${apiHostname}`
+    // Use the Next.js API proxy on the same origin to avoid CORS
+    // The proxy route dynamically forwards to the agentos-- subdomain
+    return `${window.location.origin}/api/proxy`
   }
+  // Default for localhost / SSH tunnel access
+  return 'http://localhost:8000'
+}
   // Default for localhost / SSH tunnel access
   return 'http://localhost:8000'
 }
