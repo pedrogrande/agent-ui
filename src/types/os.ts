@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface ToolCall {
   role: 'user' | 'tool' | 'system' | 'assistant'
   content: string | null
@@ -299,14 +301,14 @@ export interface AgentSessionDetail {
   agent_session_id: string
   session_id: string
   session_name: string
-  session_summary: Record<string, any> | null
-  session_state: Record<string, any> | null
+  session_summary: Record<string, unknown> | null
+  session_state: Record<string, unknown> | null
   agent_id: string | null
   total_tokens: number | null
-  agent_data: Record<string, any> | null
-  metrics: Record<string, any> | null
-  metadata: Record<string, any> | null
-  chat_history: Record<string, any>[] | null
+  agent_data: Record<string, unknown> | null
+  metrics: Record<string, unknown> | null
+  metadata: Record<string, unknown> | null
+  chat_history: Record<string, unknown>[] | null
   created_at: string | null
   updated_at: string | null
 }
@@ -316,12 +318,12 @@ export interface TeamSessionDetail {
   session_name: string
   user_id: string | null
   team_id: string | null
-  session_summary: Record<string, any> | null
-  session_state: Record<string, any> | null
-  metrics: Record<string, any> | null
-  team_data: Record<string, any> | null
-  metadata: Record<string, any> | null
-  chat_history: Record<string, any>[] | null
+  session_summary: Record<string, unknown> | null
+  session_state: Record<string, unknown> | null
+  metrics: Record<string, unknown> | null
+  team_data: Record<string, unknown> | null
+  metadata: Record<string, unknown> | null
+  chat_history: Record<string, unknown>[] | null
   created_at: string | null
   updated_at: string | null
   total_tokens: number | null
@@ -333,10 +335,10 @@ export interface WorkflowSessionDetail {
   workflow_name: string | null
   session_id: string
   session_name: string
-  session_data: Record<string, any> | null
-  session_state: Record<string, any> | null
-  workflow_data: Record<string, any> | null
-  metadata: Record<string, any> | null
+  session_data: Record<string, unknown> | null
+  session_state: Record<string, unknown> | null
+  workflow_data: Record<string, unknown> | null
+  metadata: Record<string, unknown> | null
   created_at: string | null
   updated_at: string | null
 }
@@ -408,7 +410,7 @@ export interface ContentResponse {
   type: string | null
   size: string | null
   linked_to: string | null
-  metadata: Record<string, any> | null
+  metadata: Record<string, unknown> | null
   access_count: number | null
   status: ContentStatus | null
   status_message: string | null
@@ -429,7 +431,7 @@ export interface VectorSearchRequest {
   vector_db_ids?: string[]
   search_type?: string
   max_results?: number
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
   meta?: {
     limit?: number
     page?: number
@@ -440,8 +442,8 @@ export interface VectorSearchResult {
   id: string
   content: string
   name: string | null
-  meta_data: Record<string, any> | null
-  usage: Record<string, any> | null
+  meta_data: Record<string, unknown> | null
+  usage: Record<string, unknown> | null
   reranking_score: number | null
   content_id: string | null
   content_origin: string | null

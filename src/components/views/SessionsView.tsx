@@ -112,7 +112,7 @@ const SessionDetailPanel = ({ sessionId, type, onClose }: { sessionId: string; t
           <p className="text-center text-muted">No chat history available</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {chatHistory.map((entry: any, idx: number) => {
+            {chatHistory.map((entry: { role?: string; content?: string; message?: { role?: string; content?: string } }, idx: number) => {
               const role = entry.role || (entry.message?.role) || 'unknown'
               const content = entry.content || entry.message?.content || ''
               const isUser = role === 'user'

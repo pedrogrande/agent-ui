@@ -569,7 +569,7 @@ export const searchKnowledgeAPI = async (
   base: string,
   request: VectorSearchRequest,
   authToken?: string
-): Promise<{ data: VectorSearchResult[]; meta: any }> => {
+): Promise<{ data: VectorSearchResult[]; meta: Record<string, unknown> }> => {
   const response = await fetch(APIRoutes.SearchKnowledge(base), {
     method: 'POST',
     headers: createHeaders(authToken),
