@@ -54,6 +54,8 @@ interface Store {
   ) => void
   isSessionsLoading: boolean
   setIsSessionsLoading: (isSessionsLoading: boolean) => void
+  viewMode: 'chat' | 'sessions' | 'memory' | 'knowledge'
+  setViewMode: (viewMode: 'chat' | 'sessions' | 'memory' | 'knowledge') => void
 }
 
 export const useStore = create<Store>()(
@@ -81,7 +83,7 @@ export const useStore = create<Store>()(
             typeof messages === 'function' ? messages(state.messages) : messages
         })),
       chatInputRef: { current: null },
-      selectedEndpoint: 'http://localhost:7777',
+      selectedEndpoint: 'http://localhost:8000',
       setSelectedEndpoint: (selectedEndpoint) =>
         set(() => ({ selectedEndpoint })),
       authToken: '',
@@ -104,7 +106,9 @@ export const useStore = create<Store>()(
         })),
       isSessionsLoading: false,
       setIsSessionsLoading: (isSessionsLoading) =>
-        set(() => ({ isSessionsLoading }))
+        set(() => ({ isSessionsLoading })),
+      viewMode: 'chat',
+      setViewMode: (viewMode) => set(() => ({ viewMode }))
     }),
     {
       name: 'endpoint-storage',

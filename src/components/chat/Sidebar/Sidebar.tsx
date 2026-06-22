@@ -13,6 +13,7 @@ import AuthToken from './AuthToken'
 import { isValidUrl } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useQueryState } from 'nuqs'
+import { MessageSquare, Clock, Brain, BookOpen } from 'lucide-react'
 import { truncateText } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -201,6 +202,38 @@ const Endpoint = () => {
   )
 }
 
+const ViewNav = () => {
+  const { viewMode, setViewMode, isEndpointActive } = useStore()
+  const navItems = [
+    { mode: 'chat' as const, label: 'Chat', icon: MessageSquare },
+    { mode: 'sessions' as const, label: 'Sessions', icon: Clock },
+    { mode: 'memory' as const, label: 'Memory', icon: Brain },
+    { mode: 'knowledge' as const, label: 'Knowledge', icon: BookOpen }
+  ]
+  if (!isEndpointActive) return null
+  return (
+    <div className="flex flex-col items-start gap-2">
+      <div className="text-xs font-medium uppercase text-primary">Views</div>
+      <div className="flex w-full flex-col gap-1">
+        {navItems.map(({ mode, label, icon: Icon }) => (
+          <button
+            key={mode}
+            onClick={() => setViewMode(mode)}
+            className={`flex h-9 w-full items-center gap-3 rounded-xl border p-3 text-xs font-medium uppercase transition-colors ${
+              viewMode === mode
+                ? 'border-primary/30 bg-primary/10 text-primary'
+                : 'border-primary/15 bg-accent text-muted hover:border-primary/25'
+            }`}
+          >
+            <Icon size={14} className="shrink-0" />
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const Sidebar = ({
   hasEnvToken,
   envToken
@@ -217,7 +250,8 @@ const Sidebar = ({
     selectedModel,
     hydrated,
     isEndpointLoading,
-    mode
+    mode,
+    viewMode
   } = useStore()
   const [isMounted, setIsMounted] = useState(false)
   const [agentId] = useQueryState('agent')
@@ -272,7 +306,8 @@ const Sidebar = ({
           <>
             <Endpoint />
             <AuthToken hasEnvToken={hasEnvToken} envToken={envToken} />
-            {isEndpointActive && (
+            <ViewNav />
+            {isEndpointActive && viewMode === 'chat' && (
               <>
                 <motion.div
                   className="flex w-full flex-col items-start gap-2"

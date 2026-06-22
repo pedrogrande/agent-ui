@@ -267,8 +267,14 @@ export interface Reference {
 export interface SessionEntry {
   session_id: string
   session_name: string
-  created_at: number
-  updated_at?: number
+  created_at: string | number
+  updated_at?: string | number
+  session_type?: string
+  agent_id?: string | null
+  team_id?: string | null
+  workflow_id?: string | null
+  user_id?: string | null
+  total_tokens?: number | null
 }
 
 export interface Pagination {
@@ -276,10 +282,174 @@ export interface Pagination {
   limit: number
   total_pages: number
   total_count: number
+  search_time_ms?: number
 }
 
 export interface Sessions extends SessionEntry {
   data: SessionEntry[]
+  meta: Pagination
+}
+
+// ---------------------------------------------------------------------------
+// Session Detail types (GET /sessions/{id})
+// ---------------------------------------------------------------------------
+
+export interface AgentSessionDetail {
+  user_id: string | null
+  agent_session_id: string
+  session_id: string
+  session_name: string
+  session_summary: Record<string, any> | null
+  session_state: Record<string, any> | null
+  agent_id: string | null
+  total_tokens: number | null
+  agent_data: Record<string, any> | null
+  metrics: Record<string, any> | null
+  metadata: Record<string, any> | null
+  chat_history: Record<string, any>[] | null
+  created_at: string | null
+  updated_at: string | null
+}
+
+export interface TeamSessionDetail {
+  session_id: string
+  session_name: string
+  user_id: string | null
+  team_id: string | null
+  session_summary: Record<string, any> | null
+  session_state: Record<string, any> | null
+  metrics: Record<string, any> | null
+  team_data: Record<string, any> | null
+  metadata: Record<string, any> | null
+  chat_history: Record<string, any>[] | null
+  created_at: string | null
+  updated_at: string | null
+  total_tokens: number | null
+}
+
+export interface WorkflowSessionDetail {
+  user_id: string | null
+  workflow_id: string | null
+  workflow_name: string | null
+  session_id: string
+  session_name: string
+  session_data: Record<string, any> | null
+  session_state: Record<string, any> | null
+  workflow_data: Record<string, any> | null
+  metadata: Record<string, any> | null
+  created_at: string | null
+  updated_at: string | null
+}
+
+export type SessionDetail = AgentSessionDetail | TeamSessionDetail | WorkflowSessionDetail
+
+export interface DeleteSessionsRequest {
+  session_ids: string[]
+  session_types: string[]
+}
+
+// ---------------------------------------------------------------------------
+// Memory types
+// ---------------------------------------------------------------------------
+
+export interface UserMemory {
+  memory_id: string
+  memory: string
+  topics: string[] | null
+  agent_id: string | null
+  team_id: string | null
+  user_id: string | null
+  updated_at: string | null
+}
+
+export interface UserMemoryCreate {
+  memory: string
+  user_id?: string
+  topics?: string[]
+}
+
+export interface DeleteMemoriesRequest {
+  memory_ids: string[]
+  user_id?: string
+}
+
+export interface UserStats {
+  user_id: string
+  total_memories: number
+  last_memory_updated_at: string | null
+}
+
+export interface OptimizeMemoriesRequest {
+  user_id: string
+  model?: string
+  apply: boolean
+}
+
+export interface OptimizeMemoriesResponse {
+  memories: UserMemory[]
+  memories_before: number
+  memories_after: number
+  tokens_before: number
+  tokens_after: number
+  tokens_saved: number
+  reduction_percentage: number
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge types
+// ---------------------------------------------------------------------------
+
+export type ContentStatus = 'processing' | 'completed' | 'failed'
+
+export interface ContentResponse {
+  id: string
+  name: string | null
+  description: string | null
+  type: string | null
+  size: string | null
+  linked_to: string | null
+  metadata: Record<string, any> | null
+  access_count: number | null
+  status: ContentStatus | null
+  status_message: string | null
+  created_at: string | null
+  updated_at: string | null
+}
+
+export interface ContentStatusResponse {
+  id: string | null
+  status: ContentStatus
+  status_message: string
+}
+
+export interface VectorSearchRequest {
+  query: string
+  db_id?: string
+  knowledge_id?: string
+  vector_db_ids?: string[]
+  search_type?: string
+  max_results?: number
+  filters?: Record<string, any>
+  meta?: {
+    limit?: number
+    page?: number
+  }
+}
+
+export interface VectorSearchResult {
+  id: string
+  content: string
+  name: string | null
+  meta_data: Record<string, any> | null
+  usage: Record<string, any> | null
+  reranking_score: number | null
+  content_id: string | null
+  content_origin: string | null
+  size: number | null
+}
+
+export interface PaginatedResponse<T> {
+  data: T[]
   meta: Pagination
 }
 
