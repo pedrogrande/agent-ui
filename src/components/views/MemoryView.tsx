@@ -12,7 +12,7 @@ import {
 import { UserMemory, UserStats } from '@/types/os'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Textarea } from '@/components/ui/textarea'
+import { TextArea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import dayjs from 'dayjs'
 import { Trash2, Plus, Edit3, Sparkles, Search, X, Save } from 'lucide-react'
@@ -36,7 +36,7 @@ const MemoryForm = ({ memory, onSave, onCancel }: {
       <div className="text-xs font-medium uppercase text-primary">
         {memory ? 'Edit Memory' : 'New Memory'}
       </div>
-      <Textarea
+      <TextArea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Memory content (1-5000 chars)..."

@@ -11,7 +11,7 @@ import {
 import { ContentResponse, VectorSearchResult, ContentStatus } from '@/types/os'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Textarea } from '@/components/ui/textarea'
+import { TextArea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import dayjs from 'dayjs'
 import { Trash2, Upload, Search, FileText, Link as LinkIcon, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -245,7 +245,7 @@ const KnowledgeView = () => {
               placeholder="Document name (optional)"
               className="h-9 rounded-xl border border-primary/15 bg-background px-3 text-xs"
             />
-            <Textarea
+            <TextArea
               value={uploadText}
               onChange={(e) => setUploadText(e.target.value)}
               placeholder="Paste text content here..."
