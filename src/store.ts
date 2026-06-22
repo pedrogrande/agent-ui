@@ -136,12 +136,12 @@ export const useStore = create<Store>()(
       partialize: (state) => ({
         selectedEndpoint: state.selectedEndpoint
       }),
-      migrate: (persistedState: Record<string, unknown> | undefined, version: number) => {
+      migrate: (persistedState, version) => {
         // If the persisted version is old, clear the endpoint so the new auto-detect default is used
-        if (version < 2 && persistedState) {
-          return { ...persistedState, selectedEndpoint: undefined }
+        if (version < 2) {
+          return undefined as unknown as Record<string, unknown>
         }
-        return persistedState
+        return persistedState as Record<string, unknown>
       },
       onRehydrateStorage: () => (state) => {
         state?.setHydrated?.()
