@@ -43,7 +43,10 @@
   "pnpm": {
     "overrides": {
       "picomatch": ">=2.3.2"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -56,5 +59,6 @@
     "prettier": "3.4.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }
