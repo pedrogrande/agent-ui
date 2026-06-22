@@ -27,9 +27,6 @@ function detectDefaultEndpoint(): string {
   // Default for localhost / SSH tunnel access
   return 'http://localhost:8000'
 }
-  // Default for localhost / SSH tunnel access
-  return 'http://localhost:8000'
-}
 
 interface Store {
   hydrated: boolean
