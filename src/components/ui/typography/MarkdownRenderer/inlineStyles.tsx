@@ -159,16 +159,16 @@ const Img = ({ src, alt }: ImgProps) => {
         <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-md bg-secondary/50 text-muted">
           <Paragraph className="text-primary">Image unavailable</Paragraph>
           <Link
-            href={src}
+            href={src as string}
             target="_blank"
             className="max-w-md truncate underline"
           >
-            {src}
+            {src as string}
           </Link>
         </div>
       ) : (
         <Image
-          src={src}
+          src={src as string}
           width={96}
           height={56}
           alt={alt ?? 'Rendered image'}
