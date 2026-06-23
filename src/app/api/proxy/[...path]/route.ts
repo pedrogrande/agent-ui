@@ -4,25 +4,13 @@ import { NextRequest, NextResponse } from 'next/server'
 // different Coder subdomains. The browser calls /api/proxy/* on the same
 // origin as Agent-UI, and this route forwards the request to the AgentOS API.
 //
-// The AgentOS URL is determined at runtime:
-// 1. If the request has an X-AgentOS-URL header (set by the client), use it
-// 2. If accessed via Coder subdomain, replace 'agent-ui' with 'agentos' in the host
-// 3. Default to http://localhost:8000 for SSH tunnel access
+// The proxy runs SERVER-SIDE inside the container, where AgentOS is always
+// at http://localhost:8000. We do NOT derive the URL from the Host header
+// because the container can't resolve Coder subdomains back to itself —
+// that would create a loop through the Coder proxy which requires auth.
 
-function getAgentOsUrl(req: NextRequest): string {
-  // Check for custom header (client can override)
-  const headerUrl = req.headers.get('x-agentos-url')
-  if (headerUrl) return headerUrl.replace(/\/$/, '')
-
-  // Check the host header — if it's a Coder subdomain, derive the AgentOS URL
-  const host = req.headers.get('host') || ''
-  if (host.includes('--') && host.includes('agent-ui')) {
-    const protocol = req.nextUrl.protocol || 'http:'
-    const agentosHost = host.replace('agent-ui', 'agentos')
-    return `${protocol}//${agentosHost}`
-  }
-
-  // Default for localhost / SSH tunnel
+function getAgentOsUrl(): string {
+  // AgentOS always runs at localhost:8000 inside the container
   return 'http://localhost:8000'
 }
 
@@ -31,7 +19,7 @@ export async function GET(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path } = await params
-  const agentOsUrl = getAgentOsUrl(req)
+  const agentOsUrl = getAgentOsUrl()
   const searchParams = req.nextUrl.searchParams.toString()
   const targetUrl = `${agentOsUrl}/${path.join('/')}${searchParams ? '?' + searchParams : ''}`
 
@@ -60,7 +48,7 @@ export async function POST(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path } = await params
-  const agentOsUrl = getAgentOsUrl(req)
+  const agentOsUrl = getAgentOsUrl()
   const searchParams = req.nextUrl.searchParams.toString()
   const targetUrl = `${agentOsUrl}/${path.join('/')}${searchParams ? '?' + searchParams : ''}`
 
@@ -101,7 +89,7 @@ export async function PATCH(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path } = await params
-  const agentOsUrl = getAgentOsUrl(req)
+  const agentOsUrl = getAgentOsUrl()
   const searchParams = req.nextUrl.searchParams.toString()
   const targetUrl = `${agentOsUrl}/${path.join('/')}${searchParams ? '?' + searchParams : ''}`
 
@@ -133,7 +121,7 @@ export async function DELETE(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path } = await params
-  const agentOsUrl = getAgentOsUrl(req)
+  const agentOsUrl = getAgentOsUrl()
   const searchParams = req.nextUrl.searchParams.toString()
   const targetUrl = `${agentOsUrl}/${path.join('/')}${searchParams ? '?' + searchParams : ''}`
 
