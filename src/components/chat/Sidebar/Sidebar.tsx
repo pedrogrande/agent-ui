@@ -304,9 +304,6 @@ const Sidebar = ({
         />
         {isMounted && (
           <>
-            <Endpoint />
-            <AuthToken hasEnvToken={hasEnvToken} envToken={envToken} />
-            <ViewNav />
             {isEndpointActive && viewMode === 'chat' && (
               <>
                 <motion.div
@@ -340,6 +337,8 @@ const Sidebar = ({
                 <Sessions />
               </>
             )}
+            <ViewNav />
+            <Endpoint />
           </>
         )}
       </motion.div>
