@@ -2,6 +2,7 @@ export const APIRoutes = {
   GetAgents: (agentOSUrl: string) => `${agentOSUrl}/agents`,
   AgentRun: (agentOSUrl: string) => `${agentOSUrl}/agents/{agent_id}/runs`,
   Status: (agentOSUrl: string) => `${agentOSUrl}/health`,
+  Config: (agentOSUrl: string) => `${agentOSUrl}/config`,
 
   // Sessions
   GetSessions: (agentOSUrl: string) => `${agentOSUrl}/sessions`,
@@ -37,7 +38,8 @@ export const APIRoutes = {
   OptimizeMemories: (agentOSUrl: string) => `${agentOSUrl}/optimize-memories`,
 
   // Knowledge
-  GetKnowledgeContent: (agentOSUrl: string) => `${agentOSUrl}/knowledge/content`,
+  GetKnowledgeContent: (agentOSUrl: string) =>
+    `${agentOSUrl}/knowledge/content`,
   UploadContent: (agentOSUrl: string) => `${agentOSUrl}/knowledge/content`,
   DeleteAllContent: (agentOSUrl: string) => `${agentOSUrl}/knowledge/content`,
   DeleteContent: (agentOSUrl: string, contentId: string) =>

@@ -5,6 +5,7 @@ import type { ChatMessage } from '@/types/os'
 import Videos from './Multimedia/Videos'
 import Images from './Multimedia/Images'
 import Audios from './Multimedia/Audios'
+import CopyButton from './CopyButton'
 import { memo } from 'react'
 import AgentThinkingLoader from './AgentThinkingLoader'
 
@@ -69,11 +70,14 @@ const AgentMessage = ({ message }: MessageProps) => {
   }
 
   return (
-    <div className="flex flex-row items-start gap-4 font-geist">
+    <div className="font-geist flex flex-row items-start gap-4">
       <div className="flex-shrink-0">
         <Icon type="agent" size="sm" />
       </div>
-      {messageContent}
+      <div className="flex w-full flex-col gap-2">
+        {messageContent}
+        {message.content && <CopyButton content={message.content} />}
+      </div>
     </div>
   )
 }
@@ -84,8 +88,11 @@ const UserMessage = memo(({ message }: MessageProps) => {
       <div className="flex-shrink-0">
         <Icon type="user" size="sm" />
       </div>
-      <div className="text-md rounded-lg font-geist text-secondary">
-        {message.content}
+      <div className="flex w-full flex-col gap-2">
+        <div className="text-md font-geist text-secondary rounded-lg">
+          {message.content}
+        </div>
+        {message.content && <CopyButton content={message.content} />}
       </div>
     </div>
   )

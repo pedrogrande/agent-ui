@@ -2,14 +2,20 @@ import { useCallback } from 'react'
 import { getSessionAPI, getAllSessionsAPI } from '@/api/os'
 import { useStore } from '../store'
 import { toast } from 'sonner'
-import { ChatMessage, ToolCall, ReasoningMessage, ChatEntry } from '@/types/os'
+import {
+  ChatMessage,
+  ToolCall,
+  ReasoningMessage,
+  ChatEntry,
+  SessionRun
+} from '@/types/os'
 import { getJsonMarkdown } from '@/lib/utils'
 
 interface SessionResponse {
   session_id: string
   agent_id: string
   user_id: string | null
-  runs?: ChatEntry[]
+  runs?: ChatEntry[] | SessionRun[]
   memory: {
     runs?: ChatEntry[]
     chats?: ChatEntry[]
@@ -82,7 +88,17 @@ const useSessionLoader = () => {
         )
         if (response) {
           if (Array.isArray(response)) {
-            const messagesFor = response.flatMap((run) => {
+            // For team sessions the API returns both the leader's run and
+            // each member's run. Member runs have `parent_run_id` set
+            // (pointing to the leader's run), while the leader's run has
+            // `parent_run_id` as null. Filter out member runs so only the
+            // leader's output is rendered (mirrors the backend
+            // `get_session_messages(skip_member_messages=True)` behaviour).
+            const leaderRuns = (response as SessionRun[]).filter(
+              (run) => !run.parent_run_id
+            )
+
+            const messagesFor = leaderRuns.flatMap((run) => {
               const filteredMessages: ChatMessage[] = []
 
               if (run) {

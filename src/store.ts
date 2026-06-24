@@ -76,6 +76,8 @@ interface Store {
   setIsSessionsLoading: (isSessionsLoading: boolean) => void
   viewMode: 'chat' | 'sessions' | 'memory' | 'knowledge'
   setViewMode: (viewMode: 'chat' | 'sessions' | 'memory' | 'knowledge') => void
+  quickPrompts: Record<string, string[]>
+  setQuickPrompts: (quickPrompts: Record<string, string[]>) => void
 }
 
 export const useStore = create<Store>()(
@@ -128,7 +130,9 @@ export const useStore = create<Store>()(
       setIsSessionsLoading: (isSessionsLoading) =>
         set(() => ({ isSessionsLoading })),
       viewMode: 'chat',
-      setViewMode: (viewMode) => set(() => ({ viewMode }))
+      setViewMode: (viewMode) => set(() => ({ viewMode })),
+      quickPrompts: {},
+      setQuickPrompts: (quickPrompts) => set(() => ({ quickPrompts }))
     }),
     {
       name: 'endpoint-storage',

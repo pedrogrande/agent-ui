@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { useStore } from '../store'
 
 import { AgentDetails, TeamDetails, type ChatMessage } from '@/types/os'
-import { getAgentsAPI, getStatusAPI, getTeamsAPI } from '@/api/os'
+import { getAgentsAPI, getConfigAPI, getStatusAPI, getTeamsAPI } from '@/api/os'
 import { useQueryState } from 'nuqs'
 
 const useChatActions = () => {
@@ -19,6 +19,7 @@ const useChatActions = () => {
   const setTeams = useStore((state) => state.setTeams)
   const setSelectedModel = useStore((state) => state.setSelectedModel)
   const setMode = useStore((state) => state.setMode)
+  const setQuickPrompts = useStore((state) => state.setQuickPrompts)
   const [agentId, setAgentId] = useQueryState('agent')
   const [teamId, setTeamId] = useQueryState('team')
   const [, setDbId] = useQueryState('db_id')
@@ -52,6 +53,18 @@ const useChatActions = () => {
     }
   }, [selectedEndpoint, authToken])
 
+  const getConfig = useCallback(async () => {
+    try {
+      const config = await getConfigAPI(selectedEndpoint, authToken)
+      if (config?.chat?.quick_prompts) {
+        setQuickPrompts(config.chat.quick_prompts)
+      }
+      return config
+    } catch {
+      return null
+    }
+  }, [selectedEndpoint, authToken, setQuickPrompts])
+
   const clearChat = useCallback(() => {
     setMessages([])
     setSessionId(null)
@@ -82,6 +95,7 @@ const useChatActions = () => {
         setIsEndpointActive(true)
         teams = await getTeams()
         agents = await getAgents()
+        await getConfig()
 
         if (!agentId && !teamId) {
           const currentMode = useStore.getState().mode
@@ -160,6 +174,7 @@ const useChatActions = () => {
     getStatus,
     getAgents,
     getTeams,
+    getConfig,
     setIsEndpointActive,
     setIsEndpointLoading,
     setAgents,

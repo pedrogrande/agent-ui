@@ -10,6 +10,7 @@ import {
   DeleteSessionsRequest,
   OptimizeMemoriesRequest,
   OptimizeMemoriesResponse,
+  OsConfig,
   PaginatedResponse,
   SessionDetail,
   SessionEntry,
@@ -66,6 +67,22 @@ export const getStatusAPI = async (
     headers: createHeaders(authToken)
   })
   return response.status
+}
+
+export const getConfigAPI = async (
+  base: string,
+  authToken?: string
+): Promise<OsConfig | null> => {
+  try {
+    const response = await fetch(APIRoutes.Config(base), {
+      method: 'GET',
+      headers: createHeaders(authToken)
+    })
+    if (!response.ok) return null
+    return response.json()
+  } catch {
+    return null
+  }
 }
 
 export const getAllSessionsAPI = async (
@@ -218,12 +235,19 @@ export const getAllSessionsPaginatedAPI = async (
       headers: createHeaders(authToken)
     })
     if (!response.ok) {
-      if (response.status === 404) return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+      if (response.status === 404)
+        return {
+          data: [],
+          meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+        }
       throw new Error(`Failed to fetch sessions: ${response.statusText}`)
     }
     return response.json()
   } catch {
-    return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+    return {
+      data: [],
+      meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+    }
   }
 }
 
@@ -241,7 +265,8 @@ export const getSessionDetailAPI = async (
     `${APIRoutes.GetSessionDetail(base, sessionId)}?${queryParams.toString()}`,
     { method: 'GET', headers: createHeaders(authToken) }
   )
-  if (!response.ok) throw new Error(`Failed to fetch session detail: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to fetch session detail: ${response.statusText}`)
   return response.json()
 }
 
@@ -264,7 +289,8 @@ export const renameSessionAPI = async (
       body: JSON.stringify({ session_name: sessionName })
     }
   )
-  if (!response.ok) throw new Error(`Failed to rename session: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to rename session: ${response.statusText}`)
   return response.json()
 }
 
@@ -284,7 +310,8 @@ export const deleteMultipleSessionsAPI = async (
       body: JSON.stringify(request)
     }
   )
-  if (!response.ok) throw new Error(`Failed to delete sessions: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to delete sessions: ${response.statusText}`)
   return response
 }
 
@@ -321,10 +348,17 @@ export const getMemoriesAPI = async (
       method: 'GET',
       headers: createHeaders(authToken)
     })
-    if (!response.ok) return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+    if (!response.ok)
+      return {
+        data: [],
+        meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+      }
     return response.json()
   } catch {
-    return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+    return {
+      data: [],
+      meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+    }
   }
 }
 
@@ -344,7 +378,8 @@ export const createMemoryAPI = async (
       body: JSON.stringify(memory)
     }
   )
-  if (!response.ok) throw new Error(`Failed to create memory: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to create memory: ${response.statusText}`)
   return response.json()
 }
 
@@ -365,7 +400,8 @@ export const updateMemoryAPI = async (
       body: JSON.stringify(memory)
     }
   )
-  if (!response.ok) throw new Error(`Failed to update memory: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to update memory: ${response.statusText}`)
   return response.json()
 }
 
@@ -381,7 +417,8 @@ export const deleteMemoryAPI = async (
     `${APIRoutes.DeleteMemory(base, memoryId)}?${queryParams.toString()}`,
     { method: 'DELETE', headers: createHeaders(authToken) }
   )
-  if (!response.ok) throw new Error(`Failed to delete memory: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to delete memory: ${response.statusText}`)
   return response
 }
 
@@ -401,7 +438,8 @@ export const deleteMultipleMemoriesAPI = async (
       body: JSON.stringify(request)
     }
   )
-  if (!response.ok) throw new Error(`Failed to delete memories: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to delete memories: ${response.statusText}`)
   return response
 }
 
@@ -451,7 +489,8 @@ export const optimizeMemoriesAPI = async (
       body: JSON.stringify(request)
     }
   )
-  if (!response.ok) throw new Error(`Failed to optimize memories: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to optimize memories: ${response.statusText}`)
   return response.json()
 }
 
@@ -484,10 +523,17 @@ export const getKnowledgeContentAPI = async (
       method: 'GET',
       headers: createHeaders(authToken)
     })
-    if (!response.ok) return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+    if (!response.ok)
+      return {
+        data: [],
+        meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+      }
     return response.json()
   } catch {
-    return { data: [], meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 } }
+    return {
+      data: [],
+      meta: { page: 0, limit: 20, total_pages: 0, total_count: 0 }
+    }
   }
 }
 
@@ -508,7 +554,8 @@ export const uploadContentAPI = async (
     `${APIRoutes.UploadContent(base)}?${queryParams.toString()}`,
     { method: 'POST', headers, body: formData }
   )
-  if (!response.ok) throw new Error(`Failed to upload content: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to upload content: ${response.statusText}`)
   return response.json()
 }
 
@@ -526,7 +573,8 @@ export const deleteContentAPI = async (
     `${APIRoutes.DeleteContent(base, contentId)}?${queryParams.toString()}`,
     { method: 'DELETE', headers: createHeaders(authToken) }
   )
-  if (!response.ok) throw new Error(`Failed to delete content: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to delete content: ${response.statusText}`)
   return response
 }
 
@@ -543,7 +591,8 @@ export const deleteAllContentAPI = async (
     `${APIRoutes.DeleteAllContent(base)}?${queryParams.toString()}`,
     { method: 'DELETE', headers: createHeaders(authToken) }
   )
-  if (!response.ok) throw new Error(`Failed to delete all content: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to delete all content: ${response.statusText}`)
   return response
 }
 
@@ -561,7 +610,8 @@ export const getContentStatusAPI = async (
     `${APIRoutes.GetContentStatus(base, contentId)}?${queryParams.toString()}`,
     { method: 'GET', headers: createHeaders(authToken) }
   )
-  if (!response.ok) throw new Error(`Failed to get content status: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to get content status: ${response.statusText}`)
   return response.json()
 }
 
@@ -575,6 +625,7 @@ export const searchKnowledgeAPI = async (
     headers: createHeaders(authToken),
     body: JSON.stringify(request)
   })
-  if (!response.ok) throw new Error(`Failed to search knowledge: ${response.statusText}`)
+  if (!response.ok)
+    throw new Error(`Failed to search knowledge: ${response.statusText}`)
   return response.json()
 }

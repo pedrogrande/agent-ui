@@ -30,17 +30,10 @@ export function ViewSelector() {
         setViewMode(value as 'chat' | 'sessions' | 'memory' | 'knowledge')
       }
     >
-      <SelectTrigger className="h-9 w-full rounded-xl border border-primary/15 bg-primaryAccent text-xs font-medium uppercase">
-        <div className="flex items-center gap-2">
-          {(() => {
-            const option = viewOptions.find((o) => o.value === viewMode)
-            const IconComponent = option?.icon || MessageSquare
-            return <IconComponent size={14} className="shrink-0" />
-          })()}
-          <SelectValue />
-        </div>
+      <SelectTrigger className="border-primary/15 bg-primaryAccent h-9 w-full rounded-xl border text-xs font-medium uppercase">
+        <SelectValue />
       </SelectTrigger>
-      <SelectContent className="border-none bg-primaryAccent font-dmmono shadow-lg">
+      <SelectContent className="bg-primaryAccent font-dmmono border-none shadow-lg">
         {viewOptions.map(({ value, label, icon: IconComponent }) => (
           <SelectItem key={value} value={value} className="cursor-pointer">
             <div className="flex items-center gap-2 text-xs font-medium uppercase">

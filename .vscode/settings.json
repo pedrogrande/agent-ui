@@ -3,5 +3,31 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#85587a",
+    "activityBar.background": "#85587a",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#353a26",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "editorGroup.border": "#85587a",
+    "panel.border": "#85587a",
+    "sash.hoverBorder": "#85587a",
+    "sideBar.border": "#85587a",
+    "statusBar.background": "#66445e",
+    "statusBar.border": "#66445e",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#85587a",
+    "statusBarItem.remoteBackground": "#66445e",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "tab.activeBorder": "#85587a",
+    "titleBar.activeBackground": "#66445e",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.border": "#66445e",
+    "titleBar.inactiveBackground": "#66445e99",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#66445e"
 }

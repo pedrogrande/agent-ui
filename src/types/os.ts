@@ -230,6 +230,36 @@ export interface TeamDetails {
   model?: Model
 }
 
+export interface OsConfig {
+  os_id: string
+  os_database: string
+  databases: string[]
+  chat: {
+    quick_prompts: Record<string, string[]>
+  }
+  agents: {
+    id: string
+    name: string
+    db_id: string
+    model: {
+      id: string
+      provider: string
+    }
+  }[]
+  teams: {
+    id: string
+    name: string
+    db_id: string
+    mode: string
+    model: {
+      id: string
+      provider: string
+    }
+  }[]
+  workflows: unknown[]
+  interfaces: unknown[]
+}
+
 export interface ImageData {
   revised_prompt: string
   url: string
@@ -343,7 +373,10 @@ export interface WorkflowSessionDetail {
   updated_at: string | null
 }
 
-export type SessionDetail = AgentSessionDetail | TeamSessionDetail | WorkflowSessionDetail
+export type SessionDetail =
+  | AgentSessionDetail
+  | TeamSessionDetail
+  | WorkflowSessionDetail
 
 export interface DeleteSessionsRequest {
   session_ids: string[]
@@ -477,4 +510,34 @@ export interface ChatEntry {
     }
     created_at: number
   }
+}
+
+/**
+ * Shape of a run returned by `GET /sessions/{session_id}/runs`.
+ *
+ * For team sessions the response includes both the leader's run and each
+ * member's run. Member runs have `parent_run_id` set (pointing to the
+ * leader's run), while the leader's run has `parent_run_id` as null.
+ */
+export interface SessionRun {
+  run_id: string
+  parent_run_id?: string | null
+  agent_id?: string | null
+  team_id?: string | null
+  status?: string | null
+  run_input?: string | null
+  content?: string | unknown | null
+  tools?: ToolCall[]
+  extra_data?: {
+    reasoning_steps?: ReasoningSteps[]
+    reasoning_messages?: ReasoningMessage[]
+    references?: ReferenceData[]
+  }
+  images?: ImageData[]
+  videos?: VideoData[]
+  audio?: AudioData[]
+  response_audio?: {
+    transcript?: string
+  }
+  created_at: number
 }
